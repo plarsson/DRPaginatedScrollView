@@ -22,5 +22,6 @@
 
 - (void)addPageWithHandler:(void (^)(UIView * pageView))handler;
 - (void)jumpToPage:(NSInteger)page bounce:(CGFloat)bounce completion:(void (^)(void))completion;
+- (void)removeAllPages;
 
 @end

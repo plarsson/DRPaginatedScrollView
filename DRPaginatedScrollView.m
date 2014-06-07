@@ -123,4 +123,12 @@
     }
 }
 
+- (void)removeAllPages {
+    [pageViews removeAllObjects];
+    previousPage = 0;
+    for (UIView *v in [self subviews]) {
+        [v removeFromSuperview];
+    }
+}
+
 @end
