@@ -9,6 +9,7 @@
 #import "DRPaginatedScrollView.h"
 
 @interface DRPaginatedScrollView () {
+    CGPoint savedContentOffset;
     NSInteger previousPage;
     NSMutableArray * pageViews;
 }
@@ -24,6 +25,7 @@
 - (id)init {
     if (self = [super init]) {
         pageViews = [NSMutableArray new];
+        savedContentOffset = CGPointMake(0, 0);
         
         [self setPagingEnabled:YES];
         [self setShowsHorizontalScrollIndicator:NO];
@@ -48,12 +50,24 @@
 - (void)layoutSubviews {
     if (self.contentSize.width != self.frame.size.width*self.numberOfPages) {
         [self setContentSize:CGSizeMake(self.frame.size.width*self.numberOfPages, self.contentSize.height)];
-        [self setContentOffset:CGPointMake(self.frame.size.width*previousPage, self.contentOffset.y)];
+        if(savedContentOffset.x > 0) {
+            [self setContentOffset:savedContentOffset];
+            savedContentOffset = CGPointMake(0, 0);
+        } else {
+            [self setContentOffset:CGPointMake(self.frame.size.width*previousPage, self.contentOffset.y)];
+        }
     } else {
         previousPage = [self currentPage];
     }
     
     [super layoutSubviews];
+}
+
+-(void)setContentOffset:(CGPoint)contentOffset {
+    if(contentOffset.x == 0 && self.contentOffset.x > 0) {
+        savedContentOffset = self.contentOffset;
+    }
+    [super setContentOffset:contentOffset];
 }
 
 - (NSInteger)currentPage {
